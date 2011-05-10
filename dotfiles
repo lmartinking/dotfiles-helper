@@ -34,7 +34,7 @@ function map_remove () {
   local local_file="$1"
 
   cp $MAP_FILE $MAP_FILE.bak &&
-  cat $MAP_FILE | sed "s/.*:${local_file}$//g" > $MAP_FILE &&
+  cat $MAP_FILE.bak | sed "s/.*:${local_file}$//g" > $MAP_FILE &&
   rm $MAP_FILE.bak
 
   git add "$MAP_FILE" &&
