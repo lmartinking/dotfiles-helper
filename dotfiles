@@ -92,6 +92,7 @@ function _setup-from () {
   [[ -z "$remote" ]] && die "No remote specified"
 
   git clone "$remote" "$REPO_PATH" &&
+  cd $REPO_PATH &&
   _sync
 }
 
