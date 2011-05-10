@@ -34,7 +34,7 @@ function map_remove () {
   local local_file="$1"
 
   cp $MAP_FILE $MAP_FILE.bak &&
-  cat $MAP_FILE | sed "s/.*:${local_file}$//g" > $MAP_FILE &&
+  cat $MAP_FILE.bak | sed -e "s/.*:${local_file}$//g" -e '/^$/d' > $MAP_FILE &&
   rm $MAP_FILE.bak
 
   git add "$MAP_FILE" &&
@@ -105,7 +105,7 @@ function _remove () {
     echo "Removing: $repo_file"
    
     map_remove "$repo_file" &&
-    git rm "$repo_file" &&
+    git rm -f "$repo_file" &&
     git commit -m "Removed: $repo_file"
   fi
 }
