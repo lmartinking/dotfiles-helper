@@ -79,7 +79,12 @@ function _setup () {
 }
 
 function _setup-remote () {
-  git remote add origin "$1"
+  local remote="$1"
+
+  [[ -z "$remote" ]] && die "No remote specified"
+
+  git remote add origin "$remote"
+}
 }
 
 function _add () {
