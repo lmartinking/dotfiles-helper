@@ -1,0 +1,95 @@
+---------------
+dotfiles-helper
+---------------
+
+A small script to help manage your dot files across machines.
+
+It can add, remove, and use files from your dotfiles repository, as
+well as synchronise between your local repository and the origin.
+
+It also maintains a mapping between files in your repository and names
+on your system. For example, ~/.tmux.conf will simply be tmux.conf
+in your dotfiles repository.
+
+Currently dotfiles only handles files, but it can handle files inside
+directories other than your home directory.
+
+
+Requirements
+------------
+
+* Bash, grep, sed
+* GIT
+
+
+Installation
+------------
+
+Copy or link 'dotfiles' to somewhere that is in your shell path.
+
+By default dotfiles will use ~/.dotfiles as your local repository.
+Note that it must be on the same filesystem as your home directory
+as dotfiles uses hard links.
+
+
+Usage
+-----
+
+Initial setup:
+
+	$ dotfiles setup
+	$ dotfiles setup-remote <repo-path-or-url>
+	$ dotfiles add <file>
+	...
+	$ dotfiles sync
+
+
+On your other computers:
+
+	$ dotfiles setup
+	$ dotfiles setup-remote <repo-path-or-url>
+	$ dotfiles use :all
+
+
+To add a file:
+
+	$ dotfiles add <file>
+
+	Example: "dotfiles add ~/.vimrc" will add "~/.vimrc"
+	to your repository, and name it "vimrc"
+
+
+To use a particular file:
+
+	$ dotfiles use <name>
+
+
+To use all the files in the repository:
+
+	$ dotfiles use :all
+
+
+To synchronise your dotfiles:
+
+	$ dotfiles sync
+
+
+To see your status:
+
+	$ dotfiles status
+
+
+To update your dotfile changes to your local repo:
+
+	$ dotfiles update
+
+
+Remove a file from the repository:
+
+	$ dotfiles remove <name>
+
+
+Author
+------
+
+dotfiles-helper is by Lucas Martin-King and licenced under the GPLv2
