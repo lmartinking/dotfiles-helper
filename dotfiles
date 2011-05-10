@@ -138,8 +138,8 @@ function _update () {
 
 function _sync () {
   _update
-  git pull -u origin master
-  git push -u origin master
+  git pull origin master
+  git push origin master
 }
 
 function _status () {
