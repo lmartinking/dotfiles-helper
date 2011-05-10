@@ -105,7 +105,7 @@ function _remove () {
     echo "Removing: $repo_file"
    
     map_remove "$repo_file" &&
-    git rm "$repo_file" &&
+    git rm -f "$repo_file" &&
     git commit -m "Removed: $repo_file"
   fi
 }
