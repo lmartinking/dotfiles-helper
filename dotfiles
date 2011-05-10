@@ -11,7 +11,7 @@ function die () {
 function main () {
   cmd="$1"
 
-  if [[ "$cmd" != "setup" ]] ; then
+  if [[ "$cmd" != "setup" && "$cmd" != "setup-from" ]] ; then
     cd $REPO_PATH || die "No repo! Please run '$0 setup'"
   fi
 
