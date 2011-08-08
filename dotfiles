@@ -52,7 +52,7 @@ function local_file_add () {
 }
 
 function file_link () {
-  local local_file=$( echo "$1" | sed -e "s:~:/home/$USER:" )
+  local local_file="$1"
   local repo_file="$2"
 
   if [[ -f "$local_file" ]] ; then
@@ -136,7 +136,7 @@ function _use () {
     echo "Not found :-("
   else
     for result in $results ; do
-      local local_file=$( echo $result | cut -d ':' -f 1 ) 
+      local local_file=$( echo $result | cut -d ':' -f 1 | sed -e "s:~:/home/$USER:" )
       local repo_file=$( echo $result | cut -d ':' -f 2 ) 
       echo "Using: $repo_file -> $local_file"
 
