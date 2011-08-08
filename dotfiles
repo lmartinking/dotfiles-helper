@@ -11,7 +11,7 @@ function die () {
 function main () {
   cmd="$1"
 
-  if [[ "$cmd" != "setup" ]] ; then
+  if [[ "$cmd" != "setup" && "$cmd" != "setup-from" ]] ; then
     cd $REPO_PATH || die "No repo! Please run '$0 setup'"
   fi
 
@@ -91,7 +91,8 @@ function _setup-from () {
 
   [[ -z "$remote" ]] && die "No remote specified"
 
-  git clone "$remote" .
+  git clone "$remote" "$REPO_PATH" &&
+  cd $REPO_PATH &&
   _sync
 }
 
