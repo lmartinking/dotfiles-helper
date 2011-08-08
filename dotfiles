@@ -142,7 +142,7 @@ function _use () {
       echo "Using: $repo_file -> $local_file"
 
       if [[ -f "$local_file" ]] ; then
-	if diff $local_file $repo_file > /dev/null ; then
+        if diff $local_file $repo_file > /dev/null ; then
           echo "Local file exists, but is the same as repo file. Linking anyway."
         else
           local backup_file="$local_file.local"
