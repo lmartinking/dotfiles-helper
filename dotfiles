@@ -140,6 +140,16 @@ function _use () {
       local repo_file=$( echo $result | cut -d ':' -f 2 ) 
       echo "Using: $repo_file -> $local_file"
 
+      if [[ -f "$local_file" ]] ; then
+	if diff $local_file $repo_file > /dev/null ; then
+          echo "Local file exists, but is the same as repo file. Linking anyway."
+        else
+          local backup_file="$local_file.local"
+          echo "Local file already exists. Moving to $backup_file"
+          cp "$local_file" "$backup_file"
+        fi
+      fi
+
       file_link "$local_file" "$repo_file"
     done
   fi
