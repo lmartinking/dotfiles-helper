@@ -12,7 +12,7 @@ function main () {
   cmd="$1"
 
   if [[ "$cmd" != "setup" && "$cmd" != "setup-from" ]] ; then
-    cd $REPO_PATH || die "No repo! Please run '$0 setup'"
+    cd $REPO_PATH 2> /dev/null || die "No repo! Please run '$0 setup'"
   fi
 
   shift
