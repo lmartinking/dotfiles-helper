@@ -237,4 +237,21 @@ function _status () {
   git status
 }
 
+function _help () {
+cat <<EOF
+Usage: ./dotfiles <command> [<args>]
+
+Commands:
+  setup                             Initialize new dotfiles project
+  setup-remote  <repo-path-or-url>  add new remote repository
+  add           <file>              add new file to repository
+  use         [ :all |              use all configuration files from repository
+                <name> ]            use a particular file
+  sync                              synchronise your dotfiles
+  status                            like git status
+  update                            update your dotfile changes to your local repo
+EOF
+
+}
+
 main $@
