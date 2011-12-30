@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REPO_PATH="/home/$USER/.dotfiles"
+REPO_PATH="${HOME}/.dotfiles"
 MAP_FILE="dotfiles.map"
 
 function die () {
