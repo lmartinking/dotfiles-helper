@@ -1,172 +1,271 @@
 #!/bin/bash
 
-REPO_PATH="${HOME}/.dotfiles"
+# Defining the path for the repository
+if [[ "$OSTYPE" == 'linux-gnu' ]]; then 
+	REPO_PATH="${HOME}/.dotfiles"
+fi
+if [[ "$OSTYPE" == 'darwin11' ]]; then
+	REPO_PATH="/Users/$USER/.dotfiles"
+fi
+
+# Defining the path for the file in which the files are mapped for the path
 MAP_FILE="dotfiles.map"
 
+# Die with arguments
 function die () {
   echo $@ 1>&2
   exit 1
 }
 
+# The main file
 function main () {
+	# Reading the argument from the commandline
   cmd="$1"
 
+	# Checking if the repository is initialized, if not, then die. If yes, cd into it.
   if [[ "$cmd" != "setup" && "$cmd" != "setup-from" ]] ; then
     cd $REPO_PATH 2>/dev/null || die "No repo! Please run '$0 setup'"
   fi
 
+	# Execute the given arguments
   shift
   _$cmd $@
 }
 
+# Add the file to the map/repo
 function map_add () {
+	# Read the names of the local and the repo file from commandline
   local local_file="$1"
   local repo_file="$2"
-
+	
+	# Define the commitmessage
   local commit_msg="Added Map: $local_file -> $repo_file"
 
+	# Add the map definition to the map file
   echo "$local_file:$repo_file" >> $MAP_FILE &&
+	
+	# Add the map file to the git repo
   git add $MAP_FILE &&
+	# Commit the repo
   git commit -m "$commit_msg"
 }
 
+# Remove the file from the map
 function map_remove () {
+	# Read the filename from the arguments. local in this block only
   local local_file="$1"
 
+	# Backup the mapfile first
   cp $MAP_FILE $MAP_FILE.bak &&
   cat $MAP_FILE.bak | sed -e "s/.*:${local_file}$//g" -e '/^$/d' > $MAP_FILE &&
-  rm $MAP_FILE.bak
+ 
+	# Remove the backup
+ 	rm $MAP_FILE.bak
 
+	# Add the modified map file to the repo and commit it
   git add "$MAP_FILE" &&
   git commit -m "Removed: $local_file"
 }
 
+# Add the local file to the repo
 function local_file_add () {
+	# Read the filenames from the argument
   local file="$1"
   local repo_file="$2"
+	# Define the commit message
   local commit_msg="Added: $local_file -> $repo_file"
 
+# Symlink the file into the repository, add the repo and commit it. (System specific).
+if [[ "$OSTYPE" == 'linux-gnu' ]]; then 
   cp -l "$file" "$repo_file" &&
   git add "$repo_file" &&
   git commit -m "$commit_msg"
+fi
+if [[ "$OSTYPE" == 'darwin11' ]]; then
+  ln "$file" "$repo_file" &&
+  git add "$repo_file" &&
+  git commit -m "$commit_msg"
+fi
+
 }
 
+# Link a file from the repo to the local path
 function file_link () {
+	# Read the filename from the arguments
   local local_file="$1"
   local repo_file="$2"
 
+	# If local file exists, backup it or die
   if [[ -f "$local_file" ]] ; then
     mv "$local_file" "$local_file.old" || die "Could not backup $local_file"
   fi
 
+	# Link the repo file to the local file and remove the backup
   ln "$repo_file" "$local_file" &&
   rm -f "$local_file.old"
 }
 
+# This function is called when no arguments are given
 function _ () {
+	# Echo a short help text and quit.
   echo "Usage: $0 <command> [<args>]"
   exit 1
 }
 
+# Function for setup the local repository
 function _setup () {
+	# If the REPO_PATH is defined, then create it or die
   if [[ ! -d $REPO_PATH ]] ; then
     mkdir $REPO_PATH || die "Could not create dotfiles repository"
   fi
 
+	# If the REPO_PATH still does not exist, die anyway
   [[ -d $REPO_PATH ]] || die "No repo !?"
 
+	# Change into the repo path, and init a git if it is not initialized yet
   cd $REPO_PATH && [[ ! -d .git ]] && git init .
 }
 
+# Function for setting up the remote
 function _setup-remote () {
+	# Read the remote url from the command line 
   local remote="$1"
 
+	# If the remote is not specified, die
   [[ -z "$remote" ]] && die "No remote specified"
 
+	# Add the remote as origin from the variable
   git remote add origin "$remote"
 }
 
+# Function for cloning a remote and setting it up
 function _setup-from () {
+	# Reading the remote url from the command line
   local remote="$1"
 
+	# If the command line is empty, die
   [[ -z "$remote" ]] && die "No remote specified"
 
+	# Clone the remote repository into repo path, cd into the repo path and sync
   git clone "$remote" "$REPO_PATH" &&
   cd $REPO_PATH &&
   _sync
 }
 
+# Function for adding a file into the repo
 function _add () {
+	# Read the file from the command line
   local file="$1"
+	
+	# Create the pathes for the mapfile from the pathes of the local and repo file
   local local_file=$( echo "$file" | sed -e "s:$HOME/:~/:g" ) 
   local repo_file=$( echo "$file" | sed -e "s:$HOME/::g" -e "s://:/:g" -e "s:^.::" -e 's:/:-:' ) 
 
+	# If the file does not exist, die
   [[ ! -f "$file" ]] && die "Not a file: $file"
-
+	
+	# Add the file to the repository
   local_file_add "$file" "$repo_file" &&
+	# Add a file to the map
   map_add "$local_file" "$repo_file"
 }
 
+# Function for removing a file from the repository
 function _remove () {
+	# Read the wanted file from the arguments
   local wanted="$1"
 
+	# Grep the wanted file out of the map file
   local result=$( grep ":${wanted}$" $MAP_FILE )
 
+	# If the file is not in the map file, announce this
   if [[ -z "$result" ]] ; then
     echo "Not found :-("
   else
+	# If the file is in the map file
+		# Create the path for the repo file
     local repo_file=$( echo $result | cut -d ':' -f 2 ) 
+		# Announce the removing
     echo "Removing: $repo_file"
    
+		# Remove the file from the mapfile, remove it from the git repo and commit the repo
     map_remove "$repo_file" &&
     git rm -f "$repo_file" &&
     git commit -m "Removed: $repo_file"
   fi
 }
 
+# Function for using a specified file
 function _use () {
+	# Read the wanted file from the arguments
   local wanted="$1"
 
+	# If user wants to use all files, then change the wanted file to a wildcard
   if [[ "$wanted" == ":all" ]] ; then
     wanted='.*'
   fi
 
+	# Grep the mapfile for the wanted file
   local results=$( grep ":${wanted}$" $MAP_FILE )
 
+	# If the file can't be found, announce it
   if [[ -z "$results" ]] ; then
     echo "Not found :-("
   else
+	# Iterate through the results
     for result in $results ; do
-      local local_file=$( echo $result | cut -d ':' -f 1 | sed -e "s:~:/home/$USER:" )
+		# Build the path for the file, OS specific
+			if [[ "$OSTYPE" == 'linux-gnu' ]]; then 
+	  		local local_file=$( echo $result | cut -d ':' -f 1 | sed -e "s:~:/home/$USER:" )
+			fi
+			if [[ "$OSTYPE" == 'darwin11' ]]; then
+      	local local_file=$( echo $result | cut -d ':' -f 1 | sed -e "s:~:/Users/$USER:" )
+			fi
+			# Build the path for the repo file
       local repo_file=$( echo $result | cut -d ':' -f 2 ) 
+			# Announcing which repo file is used
       echo "Using: $repo_file -> $local_file"
 
+			# If local file exists, check the diff
       if [[ -f "$local_file" ]] ; then
         if diff $local_file $repo_file > /dev/null ; then
+					# If there is no difference, announce it and link it anyway
           echo "Local file exists, but is the same as repo file. Linking anyway."
         else
+					# If there is a difference, create a backup of the old file
           local backup_file="$local_file.local"
+					# Announce the difference and the location of the backup file
           echo "Local file already exists. Moving to $backup_file"
+					# Backup the file
           cp "$local_file" "$backup_file"
         fi
       fi
 
+			# Link the file out of the repository into the local path
       file_link "$local_file" "$repo_file"
     done
   fi
 }
 
+# Function for updating the tracked file
 function _update () {
+	# Stage all previously staged files and commit them
   git commit -a -m "Update from $HOSTNAME ($(date))"
 }
 
+# Function for syncing the files
 function _sync () {
+	# First stage all the files
   _update
+	# Then pull the files from the server with automatically merges
   git pull origin master
+	# Push them back again
   git push origin master
 }
 
+# Function for getting the status of the files 
 function _status () {
+	# Just execute git status
   git status
 }
 
