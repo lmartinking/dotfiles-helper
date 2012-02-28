@@ -302,7 +302,7 @@ function _vimsetup () {
 	
 }
 
-function _vimsetup_remote () {
+function _vimsetup-remote () {
 	# cd to VIM_PATH if vim_path exists
 	if [[ -d $VIM_PATH ]]; then
 		cd $VIM_PATH

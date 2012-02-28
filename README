@@ -14,6 +14,9 @@ in your dotfiles repository.
 Currently dotfiles only handles files, but it can handle files inside
 directories other than your home directory.
 
+2012-02-27: dotfiles does now work for Linux and Mac OS
+2012-02-28: dotfiles can handle your vimfiles stored under ~/.vim now. Read below for further instructions.
+
 
 Requirements
 ------------
@@ -88,6 +91,21 @@ Remove a file from the repository:
 
 	$ dotfiles remove <name>
 
+
+Usage for syncing the vimfiles
+------------------------------
+
+Since the vimfiles are stored in their own directory, and the user does most likely sync them as the whole block,
+there is no such mapfile. The ~/.vim folder is initialized as a git repo, and all the files inside it are synced. No exceptions.
+
+Initial setup:
+
+  $ dotfiles vimsetup
+  $ dotfiles vimsetup-remote <repo-path-or-url>
+
+Sync:
+
+  $ dotfiles vimsync
 
 Author
 ------
