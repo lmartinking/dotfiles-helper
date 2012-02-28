@@ -8,6 +8,14 @@ if [[ "$OSTYPE" == 'darwin11' ]]; then
 	REPO_PATH="/Users/$USER/.dotfiles"
 fi
 
+# Defining the path for the vim files
+if [[ "$OSTYPE" == 'linux-gnu' ]]; then 
+	VIM_PATH="${HOME}/.vim"
+fi
+if [[ "$OSTYPE" == 'darwin11' ]]; then
+	VIM_PATH="/Users/$USER/.vim"
+fi
+
 # Defining the path for the file in which the files are mapped for the path
 MAP_FILE="dotfiles.map"
 
@@ -267,6 +275,76 @@ function _sync () {
 function _status () {
 	# Just execute git status
   git status
+}
+
+# Getting the status of the vim repository
+function _vimstatus () {
+	cd $VIM_PATH
+	if [[ ! -d .git ]]; then
+		die "No vim repository initialized."
+	else
+		git status
+	fi
+}
+
+# Initializes the vim path
+function _vimsetup () {
+		# If the VIM_PATH is defined, then create it or die
+  if [[ ! -d $VIM_PATH ]] ; then
+    mkdir $VIM_PATH || die "Could not create vimfiles repository"
+  fi
+
+	# If the VIM_PATH still does not exist, die anyway
+  [[ -d $VIM_PATH ]] || die "No repo !?"
+
+	# Change into the repo path, and init a git if it is not initialized yet
+  cd $VIM_PATH && [[ ! -d .git ]] && git init .
+	
+}
+
+function _vimsetup_remote () {
+	# cd to VIM_PATH if vim_path exists
+	if [[ -d $VIM_PATH ]]; then
+		cd $VIM_PATH
+		# If a git repo is initialized, do this
+		if [[ -d .git ]]; then
+			# Read the remote url from the command line 
+  		local remote="$1"
+
+			# If the remote is not specified, die
+  		[[ -z "$remote" ]] && die "No remote specified"
+
+			# Add the remote as origin from the variable
+  		git remote add origin "$remote"
+			echo "Remote Repository $remote added."
+		else
+			die "No git repository for the vim files initialized. Run 'dotfiles vimsetup' first."
+		fi
+	else
+		die "~/.vim does not exist."
+	fi
+}
+
+function _vimsync () {
+	# cd to vim path if vim path exists
+	if [[ -d $VIM_PATH ]]; then
+		cd $VIM_PATH
+		# If a git repo is initialized, do this
+		if [[ -d .git ]]; then
+			# Add all files
+			git add -A
+			# Commit them with a short commitmsg
+			git commit -m "Update from $HOSTNAME ($(date))"
+			# Pull from the repository and merge
+			git pull origin master
+			# Then push back to the repository again
+			git push origin master
+		else
+			die "No git repository for the vim files initialized. Run 'dotfiles vimsetup' first."
+		fi
+	else
+		die "~/.vim does not exist."
+	fi
 }
 
 main $@
