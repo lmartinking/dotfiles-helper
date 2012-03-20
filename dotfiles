@@ -99,7 +99,7 @@ function _setup-from () {
 function _add () {
   local file="$1"
   local local_file=$( echo "$file" | sed -e "s:$HOME/:~/:g" ) 
-  local repo_file=$( echo "$file" | sed -e "s:$HOME/::g" -e "s://:/:g" -e "s:^.::" -e 's:/:-:' ) 
+  local repo_file=$( echo "$file" | sed -e "s:$HOME/::g" -e "s://:/:g" -e "s:^.::" -e 's:/:-:g' )
 
   [[ ! -f "$file" ]] && die "Not a file: $file"
 
