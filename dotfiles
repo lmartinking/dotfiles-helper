@@ -98,8 +98,8 @@ function _setup-from () {
 
 function _add () {
   local file="$1"
-  local local_file=$( echo "$file" | sed -e "s:$HOME/:~/:g" ) 
-  local repo_file=$( echo "$file" | sed -e "s:$HOME/::g" -e "s://:/:g" -e "s:^.::" -e 's:/:-:g' )
+  local local_file=$( echo "$file" | sed -e "s:${HOME}/:~/:g" )
+  local repo_file=$( echo "$file" | sed -e "s:${HOME}/::g" -e "s://:/:g" -e "s:^.::" -e 's:/:-:g' )
 
   [[ ! -f "$file" ]] && die "Not a file: $file"
 
@@ -137,8 +137,8 @@ function _use () {
     echo "Not found :-("
   else
     for result in $results ; do
-      local local_file=$( echo $result | cut -d ':' -f 1 | sed -e "s:~:$HOME:" )
-      local repo_file=$( echo $result | cut -d ':' -f 2 ) 
+      local local_file=$( echo $result | cut -d ':' -f 1 | sed -e "s:~:${HOME}:" )
+      local repo_file=$( echo $result | cut -d ':' -f 2 )
       echo "Using: $repo_file -> $local_file"
 
       if [[ -f "$local_file" ]] ; then
