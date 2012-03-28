@@ -64,8 +64,33 @@ function file_link () {
 }
 
 function _ () {
-  echo "Usage: $0 <command> [<args>]"
+  _help
   exit 1
+}
+
+function _help () {
+  cat <<EOF
+Usage: $0 <command> <args>
+
+Commands:
+
+    setup          sets up a dotfiles repo
+    setup remote   adds a remote to your dotfiles repo
+    setup from     sets up a dotfiles repo based off a remote dotfiles
+
+    add <file>     adds a file to your dotfiles
+    remove <file>  removes a file from your dotfiles
+
+    use <file>     use a dotfile
+        :all       use all dotfiles
+
+    status         see what is modified
+
+    update         update your dotfiles with local changes
+
+    sync           synchronise your dotfiles
+
+EOF
 }
 
 function _setup () {
