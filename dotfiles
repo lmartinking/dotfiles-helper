@@ -84,6 +84,9 @@ Commands:
     use <file>     use a dotfile
     use :all       use all dotfiles
 
+    list           list dotfiles
+    list -v        list dotfiles with their locations
+
     status         see what is modified
 
     update         update your dotfiles with local changes
