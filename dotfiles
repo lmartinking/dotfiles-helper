@@ -181,6 +181,14 @@ function _use () {
   fi
 }
 
+function _list () {
+	local fmt='\2'
+
+	[[ "$1" == "-v" ]] && fmt='\2: \1'
+
+	sed -rn "s/^(.*):(.*)$/${fmt}/p" < $MAP_FILE | sort
+}
+
 function _update () {
   git commit -a -m "Update from $HOSTNAME ($(date))"
 }
