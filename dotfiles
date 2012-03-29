@@ -82,7 +82,7 @@ Commands:
     remove <file>  removes a file from your dotfiles
 
     use <file>     use a dotfile
-        :all       use all dotfiles
+    use :all       use all dotfiles
 
     status         see what is modified
 
