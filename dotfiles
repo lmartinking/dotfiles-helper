@@ -45,8 +45,13 @@ function local_file_add () {
   local file="$1"
   local repo_file="$2"
   local commit_msg="Added: $local_file -> $repo_file"
+  if [[ "$OSTYPE" == "darwin11" ]]; then
+    local linkcmd="ln"
+  else
+    local linkcmd="cp -l"
+  fi
 
-  cp -l "$file" "$repo_file" &&
+  $linkcmd "$file" "$repo_file" &&
   git add "$repo_file" &&
   git commit -m "$commit_msg"
 }
