@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 REPO_PATH="${HOME}/.dotfiles"
 MAP_FILE="dotfiles.map"
