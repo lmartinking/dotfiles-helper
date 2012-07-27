@@ -4,7 +4,7 @@
 if [[ "$OSTYPE" == 'linux-gnu' ]]; then 
 	REPO_PATH="${HOME}/.dotfiles"
 fi
-if [[ "$OSTYPE" == 'darwin11' ]]; then
+if [[ "$OSTYPE" == 'darwin11' ]] || [[ "$OSTYPE" == 'darwin12' ]]; then
 	REPO_PATH="/Users/$USER/.dotfiles"
 fi
 
@@ -258,7 +258,7 @@ function _use () {
 # Function for updating the tracked file
 function _update () {
 	# Stage all previously staged files and commit them
-  git commit -a -m "Update from $HOSTNAME ($(date))"
+	git commit -a -m "Update from $HOSTNAME ($(date))"
 }
 
 # Function for syncing the files
