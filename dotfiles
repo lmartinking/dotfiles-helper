@@ -12,7 +12,7 @@ fi
 if [[ "$OSTYPE" == 'linux-gnu' ]]; then 
 	VIM_PATH="${HOME}/.vim"
 fi
-if [[ "$OSTYPE" == 'darwin11' ]]; then
+if [[ "$OSTYPE" == 'darwin11' ]] || [[ "$OSTYPE" == 'darwin12' ]]; then
 	VIM_PATH="/Users/$USER/.vim"
 fi
 
@@ -89,7 +89,7 @@ if [[ "$OSTYPE" == 'linux-gnu' ]]; then
   git add "$repo_file" &&
   git commit -m "$commit_msg"
 fi
-if [[ "$OSTYPE" == 'darwin11' ]]; then
+if [[ "$OSTYPE" == 'darwin11' ]] || [[ "$OSTYPE" == 'darwin12' ]]; then
   ln "$file" "$repo_file" &&
   git add "$repo_file" &&
   git commit -m "$commit_msg"
@@ -226,7 +226,7 @@ function _use () {
 			if [[ "$OSTYPE" == 'linux-gnu' ]]; then 
 	  		local local_file=$( echo $result | cut -d ':' -f 1 | sed -e "s:~:/home/$USER:" )
 			fi
-			if [[ "$OSTYPE" == 'darwin11' ]]; then
+			if [[ "$OSTYPE" == 'darwin11' ]] || [[ "$OSTYPE" == 'darwin12' ]]; then
       	local local_file=$( echo $result | cut -d ':' -f 1 | sed -e "s:~:/Users/$USER:" )
 			fi
 			# Build the path for the repo file
