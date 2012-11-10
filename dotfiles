@@ -117,7 +117,61 @@ function file_link () {
 function _ () {
 	# Echo a short help text and quit.
   echo "Usage: $0 <command> [<args>]"
+  echo "Maybe '$0 help'"
   exit 1
+}
+
+function _help () {
+  # Echo a help message
+  echo "  
+  dotfiles-helper
+  ===============
+  
+  Requirements
+  ------------
+  * bash
+  * grep
+  * sed
+  * git
+  * for vimfiles sync: vim and a ~/.vim directory
+  
+  Usage for dotfiles
+  ------------------
+  Initial:
+  1. 'dotfiles setup' for setting up the working directory
+  2. 'dotfiles setup-remote' for specifying the remote git repository to sync to
+  3. 'dotfiles add <file>' - Add a file to the sync. MUST USE ABSOLUTE URL
+  4. 'dotfiles sync' to sync the working directory with the remote
+  
+  On other computers:
+  1. 'dotfiles setup'
+  2. 'dotfiles setup-remote'
+  3. 'dotfiles use <file>' (without the leading dot) File is going to the exact position where it was on the source computer
+  3. or: 'dotfiles use :all' Overwrite all local files with the synced files from remote
+  The old local file is moved to <filename>.old.
+  
+  To update the files in the repository:
+  'dotfiles update'
+  
+  To remove a file from the repository (not the local file itself):
+  'dotfiles remove <filename>'
+  
+  To get the status of the repository:
+  'dotfiles status'
+  
+  
+  Usage for vimfiles
+  ------------------
+  You need to have a ~/.vim directory which you want to sync.
+  1. 'dotfiles vimsetup' to create a Git-Repository in your ~/.vim directory.
+  2. 'dotfiles vimsetup-remote' to specify the remote repository to sync.
+  THIS MUST NOT BE THE SAME REPOSITORY AS YOUR DOTFILES REPOSITORY.
+  3. 'dotfiles vimsync' to sync your vimfiles to the remote repository.
+  
+  
+  Author
+  ------
+  The original script was released by Lucas Martin-King and was modified for vimsync by Simon Szustkowski. It is licenced under the GPLv2."
 }
 
 # Function for setup the local repository
