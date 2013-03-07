@@ -279,9 +279,15 @@ function _use () {
 		# Build the path for the file, OS specific
 			if [[ "$OSTYPE" == 'linux-gnu' ]]; then 
 	  		local local_file=$( echo $result | cut -d ':' -f 1 | sed -e "s:~:/home/$USER:" )
+        # Handle subdirectories
+        local directory=$(dirname `echo ${result} | cut -d ':' -f 1 | sed -e "s:~:/home/$USER:"`)
+        mkdir -p $directory
 			fi
 			if [[ "$OSTYPE" == 'darwin11' ]] || [[ "$OSTYPE" == 'darwin12' ]]; then
       	local local_file=$( echo $result | cut -d ':' -f 1 | sed -e "s:~:/Users/$USER:" )
+        # Handle subdirectories
+        local directory=$(dirname `echo ${result} | cut -d ':' -f 1 | sed -e "s:~:/Users/$USER:"`)
+        mkdir -p $directory
 			fi
 			# Build the path for the repo file
       local repo_file=$( echo $result | cut -d ':' -f 2 ) 
