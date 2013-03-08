@@ -220,15 +220,21 @@ function _add () {
   local file="$1"
 	
 	# Create the pathes for the mapfile from the pathes of the local and repo file
-  local local_file=$( echo "$file" | sed -e "s:$HOME/:~/:g" ) 
-  local repo_file=$( echo "$file" | sed -e "s:$HOME/::g" -e "s://:/:g" -e "s:^.::" -e 's:/:-:' ) 
+  local local_file=$( echo "$file" | sed -e "s:$HOME/:~/:g" ) # Left side of dotfiles.map entry
+  local repo_file=$( echo "$file" | sed -e "s:$HOME/::g" -e "s://:/:g" -e "s:^.::" -e 's:/:-:' ) #Right side of dotfiles.map entry 
 
 	# If the file does not exist, die
   [[ ! -f "$file" ]] && die "Not a file: $file"
-	
-	# Add the file to the repository
+
+  # If the file is already in the repository, die
+  if grep $local_file $MAP_FILE > /dev/null
+  then
+    die "File is already added."
+  fi
+
+  # Add the file to the repository
   local_file_add "$file" "$repo_file" &&
-	# Add a file to the map
+  # Add a file to the map
   map_add "$local_file" "$repo_file"
 }
 
