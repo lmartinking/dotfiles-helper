@@ -1,20 +1,10 @@
 #!/bin/bash
 
 # Defining the path for the repository
-if [[ $(uname) == 'Linux' ]] then 
-	REPO_PATH="${HOME}/.dotfiles"
-fi
-if [[ "$OSTYPE" == 'darwin11' ]] || [[ "$OSTYPE" == 'darwin12' ]]; then
-	REPO_PATH="/Users/$USER/.dotfiles"
-fi
+REPO_PATH="${HOME}/.dotfiles"
 
 # Defining the path for the vim files
-if [[ $(uname) == 'Linux' ]]; then 
-	VIM_PATH="${HOME}/.vim"
-fi
-if [[ "$OSTYPE" == 'darwin11' ]] || [[ "$OSTYPE" == 'darwin12' ]]; then
-	VIM_PATH="/Users/$USER/.vim"
-fi
+VIM_PATH="${HOME}/.vim"
 
 # Defining the path for the file in which the files are mapped for the path
 MAP_FILE="dotfiles.map"
@@ -89,7 +79,7 @@ if [[ $(uname) == 'Linux' ]]; then
   git add "$repo_file" &&
   git commit -m "$commit_msg"
 fi
-if [[ "$OSTYPE" == 'darwin11' ]] || [[ "$OSTYPE" == 'darwin12' ]]; then
+if [[ $(uname) == 'Darwin' ]]; then 
   ln "$file" "$repo_file" &&
   git add "$repo_file" &&
   git commit -m "$commit_msg"
@@ -283,18 +273,10 @@ function _use () {
 	# Iterate through the results
     for result in $results ; do
 		# Build the path for the file, OS specific
-			if [[ "$OSTYPE" == 'linux-gnu' ]]; then 
-	  		local local_file=$( echo $result | cut -d ':' -f 1 | sed -e "s:~:/home/$USER:" )
-        # Handle subdirectories
-        local directory=$(dirname `echo ${result} | cut -d ':' -f 1 | sed -e "s:~:/home/$USER:"`)
-        mkdir -p $directory
-			fi
-			if [[ "$OSTYPE" == 'darwin11' ]] || [[ "$OSTYPE" == 'darwin12' ]]; then
-      	local local_file=$( echo $result | cut -d ':' -f 1 | sed -e "s:~:/Users/$USER:" )
-        # Handle subdirectories
-        local directory=$(dirname `echo ${result} | cut -d ':' -f 1 | sed -e "s:~:/Users/$USER:"`)
-        mkdir -p $directory
-			fi
+	  	local local_file=$( echo $result | cut -d ':' -f 1 | sed -e "s:~:$HOME:" )
+      # Handle subdirectories
+      local directory=$(dirname `echo ${result} | cut -d ':' -f 1 | sed -e "s:~:$HOME:"`)
+      mkdir -p $directory
 			# Build the path for the repo file
       local repo_file=$( echo $result | cut -d ':' -f 2 ) 
 			# Announcing which repo file is used
