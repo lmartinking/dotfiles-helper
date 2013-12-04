@@ -107,7 +107,18 @@ Sync:
 
   $ dotfiles vimsync
 
+Usage for syncng the GnuPG folder
+---------------------------------
+
+Same usage as the vimfiles handling, but use
+	$ dotfiles gpgsetup
+	$ dotfiles gpgsetup-remote
+	$ dotfiles gpgsync
+
+You should use a private repository for your GPG files, though.
+
 Author
 ------
 
-dotfiles-helper is by Lucas Martin-King and licenced under the GPLv2
+dotfiles-helper was originally written by Lucas Martin-King and licenced under the GPLv2.
+The current fork is modified by Simon Szustkowski.
