@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Defining the path for the repository
 REPO_PATH="${HOME}/.dotfiles"
