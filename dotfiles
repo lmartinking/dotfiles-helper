@@ -78,7 +78,7 @@ function local_file_add () {
 
 # Symlink the file into the repository, add to the repo and commit it. (System specific).
 if [[ $(uname) == 'Linux' ]]; then 
-  cp -l "$file" "$repo_file" &&
+  ln "$file" "$repo_file" &&
   git add "$repo_file" &&
   git commit -m "$commit_msg"
 fi
